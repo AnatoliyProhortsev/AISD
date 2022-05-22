@@ -15,14 +15,16 @@ private:
 		int frequency;
 	};
 
-	int tSize; //Размер таблицы(кол-во символов)
-	Node* table; //Таблица частот встречаемости символов
-	std::map<char, std::string> codes; //Код для каждого символа
+	int tSize;							//Размер таблицы(кол-во символов)
+	unsigned int operationsCount = 0;		//Кол-во операций(для подсчёта эффективности для разных языков)
+	Node* table;						//Таблица частот встречаемости символов
+	std::map<char, std::string> codes;  //Код для каждого символа
 
 	static int NodeComparator(const void* elem1, const void* elem2); //Собственный компаратор для сравнения частот
 	int getMedian(int li, int ri);
 	void EncodeShannonAlgorithm(int li, int ri);
 public:
+	unsigned getOpCount();
 	bool EncodeFile(const std::string& inputFileName, const std::string& outputFileName);
 	bool DecodeFile(const std::string& inputFileName, const std::string& outputFileName);
 	~Coder();
