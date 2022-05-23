@@ -26,7 +26,7 @@ void Coder::EncodeShannonAlgorithm(int li, int ri)
 	}
 	else
 	{
-		int m = getMedian(li, ri); //Расчёт медианного значения данного интервала
+		int m = getMedian(li, ri); //Расчёт медианного индекса данного интервала
 
 		for (int i = li; i <= ri; i++)
 		{
@@ -43,7 +43,7 @@ void Coder::EncodeShannonAlgorithm(int li, int ri)
 	}
 }
 
-int Coder::getMedian(int li, int ri) //Функция нахождения медианного значения в заданном промежутке
+int Coder::getMedian(int li, int ri) //Функция нахождения медианного индекса в заданном промежутке
 {
 	int sumOne = 0;
 
@@ -155,34 +155,34 @@ bool Coder::EncodeFile(const std::string& inputFileName, const std::string& outp
 	}
 	std::cout << "\nEncoded text:\n\n";
 
-	inputFile.clear(); //Очистка флага конца файла
-	inputFile.seekg(0);
-	operationsCount += 2;
+inputFile.clear(); //Очистка флага конца файла
+inputFile.seekg(0);
+operationsCount += 2;
 
-	//Запись кодов в файл
+//Запись кодов в файл
 
-	while (inputFile.get(symb)) 
+while (inputFile.get(symb))
+{
+	std::cout << codes[symb].c_str();
+	outputFile << codes[symb].c_str();
+	if (inputFile.fail() || outputFile.fail())
 	{
-		std::cout << codes[symb].c_str();
-		outputFile << codes[symb].c_str();
-		if (inputFile.fail() || outputFile.fail())
-		{
-			std::cout << "Error during writing codes in file. Aborting.\n ";
-			inputFile.close();
-			outputFile.close();
-			return false;
-		}
-		operationsCount += 6;
+		std::cout << "Error during writing codes in file. Aborting.\n ";
+		inputFile.close();
+		outputFile.close();
+		return false;
 	}
+	operationsCount += 6;
+}
 
-	std::cout << "\n\nEncoded text and table successfully written in " << outputFileName;
-	std::cout << '\n';
+std::cout << "\n\nEncoded text and table successfully written in " << outputFileName;
+std::cout << '\n';
 
-	inputFile.close();
-	outputFile.close();
-	operationsCount += 2;
+inputFile.close();
+outputFile.close();
+operationsCount += 2;
 
-	return true;
+return true;
 }
 
 bool Coder::DecodeFile(const std::string& inputFileName, const std::string& outputFileName)
@@ -215,8 +215,8 @@ bool Coder::DecodeFile(const std::string& inputFileName, const std::string& outp
 		inputFile >> freq;
 		inputFile.get();
 		inputFile >> code;
-		codes[ch] = code;
 
+		codes[ch] = code;
 		if (codes[ch].length() < minLen)	//Определение минимальной длины кода
 			minLen = codes[ch].length();
 
@@ -228,8 +228,8 @@ bool Coder::DecodeFile(const std::string& inputFileName, const std::string& outp
 			return false;
 		}
 	}
-	
-	
+
+
 	std::ofstream outputFile(outputFileName, std::ios::out);
 	if (!outputFile.is_open())
 	{
@@ -254,9 +254,9 @@ bool Coder::DecodeFile(const std::string& inputFileName, const std::string& outp
 			return false;
 		}
 		accum += ch;
-		for (it = codes.begin(); it != codes.end(); it++)
+		if ((accum.length() >= minLen))
 		{
-			if ((*it).second.length() >= minLen)	//Пропуск лишних чтений таблицы
+			for (it = codes.begin(); it != codes.end(); it++)
 			{
 				if (!strcmp((*it).second.c_str(), accum.c_str()))	//Сравнение аккумулированной строки кодов с таблицей
 				{
